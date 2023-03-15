@@ -27,7 +27,7 @@ jobs:
           role-session-name: GitHub-Action-Role
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Set up JDK 1.8
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: corretto
@@ -64,6 +64,7 @@ jobs:
         echo "Deploying branch ${{ env.GITHUB_REF }} to ${{ github.event.inputs.environment }}"
         commit_hash=`git rev-parse HEAD`
         deployment_id=`aws deploy create-deployment --application-name CodeDeployAppNameWithASG --deployment-group-name CodeDeployGroupName --github-location repository=$GITHUB_REPOSITORY,commitId=$commit_hash --ignore-application-stop-failures | jq '.deploymentId'`
+        echo $deployment_id
         echo "DEPLOYMENT_ID=$deployment_id" >> $GITHUB_OUTPUT
     - name: Check Deployment Status
       run: |
